@@ -1,6 +1,7 @@
-import React from 'react';
-import { Sparkles, BookOpen, Compass, History, Settings, HelpCircle, Flame } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, BookOpen, Compass, History, Settings, HelpCircle, Flame, Music, Volume2 } from 'lucide-react';
 import { ZodiacSignInfo } from '../types';
+import { zenAudio } from '../utils/zenAudio';
 
 interface NavbarProps {
   activeTab: 'dashboard' | 'reading' | 'history' | 'codex';
@@ -17,6 +18,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSettings,
   onOpenTutorial
 }) => {
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAudioPlaying(zenAudio.getIsPlaying());
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleToggleMusic = () => {
+    const active = zenAudio.togglePlay();
+    setIsAudioPlaying(active);
+  };
   return (
     <header className="sticky top-0 z-40 bg-black/40 backdrop-blur-md border-b border-purple-500/20 px-4 lg:px-8 h-16 flex items-center">
       <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
@@ -99,6 +113,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <span className="text-sm">{selectedZodiac.symbol}</span>
             <span>{selectedZodiac.name}</span>
+          </button>
+
+          {/* Zen Music Quick Toggle */}
+          <button
+            onClick={handleToggleMusic}
+            className={`p-2 rounded-full border transition-all ${
+              isAudioPlaying
+                ? 'bg-amber-200 text-slate-950 border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.4)] animate-pulse'
+                : 'bg-black/40 border-purple-500/30 text-purple-200/70 hover:text-amber-200 hover:border-amber-400/40'
+            }`}
+            title={isAudioPlaying ? 'Mute Zen Music' : 'Play Zen Music'}
+          >
+            {isAudioPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
           </button>
 
           {/* Guide / Tutorial Button */}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TarotCard } from '../types';
 import { Sparkles, Scissors, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { zenAudio } from '../utils/zenAudio';
 
 interface FanSpreadPickerProps {
   cards: TarotCard[];
@@ -24,6 +25,7 @@ export const FanSpreadPicker: React.FC<FanSpreadPickerProps> = ({
 
   const handleCutClick = () => {
     setIsCutting(true);
+    zenAudio.playSingingBowlChime(432);
     onCutDeck();
     setTimeout(() => setIsCutting(false), 1200);
   };
@@ -128,7 +130,10 @@ export const FanSpreadPicker: React.FC<FanSpreadPickerProps> = ({
                     key={card.id + '_' + idx}
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    onClick={() => onSelectCard(card)}
+                    onClick={() => {
+                      zenAudio.playCardDrawSFX();
+                      onSelectCard(card);
+                    }}
                     style={{
                       transform: `rotate(${angle}deg) translateY(${isHovered ? -35 : 0}px) scale(${isHovered ? 1.15 : 1})`,
                       transformOrigin: 'bottom center',

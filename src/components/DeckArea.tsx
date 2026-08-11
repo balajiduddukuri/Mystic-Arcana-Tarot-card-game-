@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TarotCard } from '../types';
 import { Shuffle, Layers, Sparkles, Plus, ToggleLeft, ToggleRight } from 'lucide-react';
+import { zenAudio } from '../utils/zenAudio';
 
 interface DeckAreaProps {
   remainingCards: TarotCard[];
@@ -25,6 +26,7 @@ export const DeckArea: React.FC<DeckAreaProps> = ({
 
   const handleShuffleClick = () => {
     setIsShuffling(true);
+    zenAudio.playSingingBowlChime(528);
     onShuffle();
     setTimeout(() => setIsShuffling(false), 800);
   };

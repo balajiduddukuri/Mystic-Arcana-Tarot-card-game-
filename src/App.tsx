@@ -6,6 +6,7 @@ import { TarotCodex } from './components/TarotCodex';
 import { ReadingHistory } from './components/ReadingHistory';
 import { OnboardingTour } from './components/OnboardingTour';
 import { ZodiacSettingsModal } from './components/ZodiacSettingsModal';
+import { ZenAudioPlayer } from './components/ZenAudioPlayer';
 import { ZODIAC_SIGNS } from './data/horoscopeData';
 import { ZodiacSignInfo, SavedReading } from './types';
 
@@ -82,6 +83,9 @@ export default function App() {
         selectedZodiac={selectedZodiac}
         onSelectZodiac={setSelectedZodiac}
       />
+
+      {/* Floating Zen Audio Soundscape Player */}
+      <ZenAudioPlayer />
     </div>
   );
 }

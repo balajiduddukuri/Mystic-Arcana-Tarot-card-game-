@@ -1,5 +1,7 @@
 # 🔮 Mystic Arcana — Complete 78-Card Tarot Deck Guide & Reference
 
+**Author:** Duddukuri Balaji
+
 Welcome to the definitive **78-Card Tarot Encyclopedia & Codex** for **Mystic Arcana**. This guide provides comprehensive symbolism, elemental attributions, astrological rulerships, upright and reversed meanings, as well as love, career, and spiritual guidance for every card in the deck.
 
 ---
@@ -314,4 +316,4 @@ The traditional 78-card Tarot deck is divided into two primary sections:
   5. **Top:** Potential Future Outcome.
 
 ---
-*Mystic Arcana • Created with Gemini & React • Designed for Clarity, Depth, and Celestial Wisdom.*
+*Mystic Arcana • Created by Duddukuri Balaji • Designed with Gemini & React for Clarity, Depth, and Celestial Wisdom.*

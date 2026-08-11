@@ -47,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               MYSTIC ARCANA
             </h1>
             <p className="text-[9px] uppercase tracking-[0.2em] text-purple-300/60 font-mono">
-              Tarot & Celestial Oracle
+              Tarot & Celestial Oracle • By Duddukuri Balaji
             </p>
           </div>
         </div>

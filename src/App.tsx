@@ -67,6 +67,16 @@ export default function App() {
         )}
       </main>
 
+      {/* Footer */}
+      <footer className="border-t border-purple-500/10 bg-black/30 py-6 text-center text-xs text-purple-300/50 space-y-1">
+        <p className="font-serif tracking-widest uppercase">
+          Mystic Arcana • Created by <span className="text-amber-200/80 font-semibold">Duddukuri Balaji</span>
+        </p>
+        <p className="text-[10px] text-purple-400/40">
+          78-Card Tarot Experience & Celestial Oracle
+        </p>
+      </footer>
+
       {/* Modals */}
       <OnboardingTour
         isOpen={isTutorialOpen}

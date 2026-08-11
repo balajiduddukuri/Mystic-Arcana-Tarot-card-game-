@@ -16,6 +16,81 @@ export const ZODIAC_SIGNS: ZodiacSignInfo[] = [
   { id: 'pisces', name: 'Pisces', symbol: '♓', dates: 'Feb 19 - Mar 20', element: 'Water', rulingPlanet: 'Neptune', trait: 'Mystical, Empathetic, Creative' },
 ];
 
+export const ZODIAC_AFFIRMATIONS: Record<string, string[]> = {
+  aries: [
+    "I channel my fiery passion into bold, purposeful action today. I am fearlessly unstoppable.",
+    "My pioneering spirit opens doors where others see walls. I trust my inner fire and momentum.",
+    "I lead with courage, integrity, and boundless enthusiasm as my life path aligns with victory.",
+    "I am the master of my own courage. Every challenge I encounter transforms into inspired action."
+  ],
+  taurus: [
+    "I am grounded in peace, surrounded by abundance, and worthy of enduring beauty.",
+    "My patience is my superpower. I cultivate prosperity step by deliberate, joyful step.",
+    "I trust the steady rhythm of life and honor my sacred sanctuary for rest and comfort.",
+    "I stand unshakable in my self-worth. Peace and financial stability flow naturally to me."
+  ],
+  gemini: [
+    "My mind is an endless source of inspiration, joy, and brilliant connected wisdom.",
+    "I express my authentic truth with clarity, playfulness, and vibrant intellectual grace.",
+    "I welcome fresh perspectives and allow life's synchronicities to surprise and delight me.",
+    "I easily bridge ideas with hearts, radiating sparkling curiosity and versatile brilliance."
+  ],
+  cancer: [
+    "My intuition is my infallible inner compass. I honor and nurture my compassionate soul.",
+    "I am safe to feel deeply and share my gentle, protective warmth with those I love.",
+    "I create a sanctuary of emotional harmony and lasting security wherever I walk.",
+    "Like the lunar tides, I embrace my natural emotional flow and trust my inner knowing."
+  ],
+  leo: [
+    "I shine my radiant, warm light brightly without apology. I am born to inspire and uplift.",
+    "My heart is generous, my spirit is noble, and my creative expression knows no bounds.",
+    "I step confidently into the spotlight of my own destiny with royal grace and joy.",
+    "I lead with love, warmth, and authentic magnetism in every interaction today."
+  ],
+  virgo: [
+    "I release perfectionism and celebrate the quiet excellence of my daily progress.",
+    "My mind is organized, my vision is crystal clear, and my service deeply enriches others.",
+    "I cultivate inner order and serene focus, trusting that life unfolds in divine harmony.",
+    "I honor my physical body as a sacred vessel and bestow practical wisdom on my world."
+  ],
+  libra: [
+    "I cultivate perfect balance, aesthetic harmony, and deep tranquility within my soul.",
+    "My relationships are mirrors of mutual respect, unconditional love, and spiritual alignment.",
+    "I make decisions with gracious ease, trusting in the fairness and balance of the cosmos.",
+    "I am a beacon of diplomacy, artistic beauty, and serene grace in all circumstances."
+  ],
+  scorpio: [
+    "I embrace my transformative power. From every shift, I rise stronger, wiser, and reborn.",
+    "My intuition sees beyond illusions. I trust my profound emotional resilience and depth.",
+    "I align with authentic truth and allow my magnetic focus to manifest my highest intentions.",
+    "I honor my sacred depth and channel my intensity into creation and soul healing."
+  ],
+  sagittarius: [
+    "The universe expands before me in infinite abundance, adventure, and higher truth.",
+    "I walk my path with optimism, warmth, and an open, truth-seeking heart.",
+    "I am a lifelong explorer, trusting that every journey enriches my mind and spirit.",
+    "My vision is vast, my faith is unshakable, and my joyful spirit remains forever free."
+  ],
+  capricorn: [
+    "I am building an enduring legacy through discipline, wisdom, and steady resolve.",
+    "I honor my ambitious goals and celebrate every milestone peak I conquer.",
+    "My authority is rooted in integrity, emotional maturity, and deep self-respect.",
+    "I trust my inner stamina; time and perseverance work continuously in my favor."
+  ],
+  aquarius: [
+    "My unique vision and innovative mind pave the way for a brighter collective future.",
+    "I embrace my individuality with pride, inspiring freedom, truth, and hope in others.",
+    "I am tuned into the higher frequency of humanity, generating breakthrough insights.",
+    "I honor my independent path while showering unconditional goodwill on all beings."
+  ],
+  pisces: [
+    "I am intimately connected to the boundless ocean of divine love, art, and empathy.",
+    "My dreams are sacred seeds of reality. I trust the intuitive whispers of my soul.",
+    "I establish gentle boundaries while letting my empathy heal and uplift those around me.",
+    "I release resistance and float gracefully upon the cosmic stream of peace and magic."
+  ]
+};
+
 export const generateDailyHoroscope = (signId: string, dateStr?: string): DailyHoroscope => {
   const sign = ZODIAC_SIGNS.find((s) => s.id === signId) || ZODIAC_SIGNS[7]; // default Scorpio
   const date = dateStr || new Date().toISOString().split('T')[0];
@@ -37,6 +112,10 @@ export const generateDailyHoroscope = (signId: string, dateStr?: string): DailyH
   const timeIndex = posHash % times.length;
   const compatibleSign = ZODIAC_SIGNS[(posHash + 3) % ZODIAC_SIGNS.length].name;
 
+  // Personalized Daily Affirmation
+  const signAffirmations = ZODIAC_AFFIRMATIONS[sign.id] || ZODIAC_AFFIRMATIONS['scorpio'];
+  const dailyAffirmation = signAffirmations[posHash % signAffirmations.length];
+
   // 7-day trend history
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const sevenDayTrend = days.map((day, idx) => {
@@ -56,6 +135,7 @@ export const generateDailyHoroscope = (signId: string, dateStr?: string): DailyH
     love: `Venus brings soft warmth into your emotional sphere. If partnered, an open conversation opens fresh tenderness. If single, your natural magnetic charm shines brightly during quiet afternoon hours.`,
     career: `Mercury grants sharp focus for strategic planning. An unexpected insight during collaborative discussions resolves a lingering bottleneck. Stay steady and trust your instincts.`,
     wellbeing: `Ground your physical energy through nature walks, mindful breathing, or gentle stretches. Hydrate well and avoid absorbing external anxieties.`,
+    daily_affirmation: dailyAffirmation,
     lucky_number: luckyNum,
     lucky_color: luckyColors[colorIndex],
     lucky_time: times[timeIndex],

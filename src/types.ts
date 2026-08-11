@@ -89,6 +89,7 @@ export interface DailyHoroscope {
   love: string;
   career: string;
   wellbeing: string;
+  daily_affirmation: string;
   lucky_number: number;
   lucky_color: string;
   lucky_time: string;

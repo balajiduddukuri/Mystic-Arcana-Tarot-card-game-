@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, BookOpen, Compass, History, Settings, HelpCircle, Flame, Music, Volume2 } from 'lucide-react';
+import { Sparkles, BookOpen, Compass, History, Settings, HelpCircle, Flame, Music, Volume2, Palette } from 'lucide-react';
 import { ZodiacSignInfo } from '../types';
 import { zenAudio } from '../utils/zenAudio';
 
@@ -9,6 +9,7 @@ interface NavbarProps {
   selectedZodiac: ZodiacSignInfo;
   onOpenSettings: () => void;
   onOpenTutorial: () => void;
+  onOpenThemeSelector: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -16,7 +17,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   selectedZodiac,
   onOpenSettings,
-  onOpenTutorial
+  onOpenTutorial,
+  onOpenThemeSelector
 }) => {
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
@@ -126,6 +128,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             title={isAudioPlaying ? 'Mute Zen Music' : 'Play Zen Music'}
           >
             {isAudioPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+          </button>
+
+          {/* Theme Selector Button */}
+          <button
+            onClick={onOpenThemeSelector}
+            className="p-2 rounded-full bg-black/40 border border-purple-500/30 text-purple-200/70 hover:text-amber-200 hover:border-amber-400/40 transition-all"
+            title="Change Celestial Theme"
+          >
+            <Palette className="w-4 h-4" />
           </button>
 
           {/* Guide / Tutorial Button */}

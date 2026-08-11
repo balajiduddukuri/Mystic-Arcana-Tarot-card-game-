@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Heart, Briefcase, Activity, Calendar, Star, Compass, ArrowRight, Eye, RefreshCw } from 'lucide-react';
+import { Sparkles, Heart, Briefcase, Activity, Calendar, Star, Compass, ArrowRight, RefreshCw, Quote, Copy, Check, Volume2, PenTool, Flame } from 'lucide-react';
 import { ZodiacSignInfo, DailyHoroscope, CardOfTheDay } from '../types';
 import { ZODIAC_SIGNS } from '../data/horoscopeData';
+import { zenAudio } from '../utils/zenAudio';
 
 interface HoroscopeDashboardProps {
   selectedZodiac: ZodiacSignInfo;
@@ -17,10 +18,31 @@ export const HoroscopeDashboard: React.FC<HoroscopeDashboardProps> = ({
   const [data, setData] = useState<{ horoscope: DailyHoroscope; cardOfTheDay: CardOfTheDay } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [copiedAffirmation, setCopiedAffirmation] = useState(false);
+  const [showReflection, setShowReflection] = useState(false);
+  const [userReflection, setUserReflection] = useState<string>(() => {
+    return localStorage.getItem(`reflection_${selectedZodiac.id}`) || '';
+  });
 
   useEffect(() => {
     fetchHoroscope(selectedZodiac.id);
+    setUserReflection(localStorage.getItem(`reflection_${selectedZodiac.id}`) || '');
   }, [selectedZodiac.id]);
+
+  const handleCopyAffirmation = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedAffirmation(true);
+    setTimeout(() => setCopiedAffirmation(false), 2000);
+  };
+
+  const handleChimeAffirmation = () => {
+    zenAudio.playSingingBowlChime(528); // 528Hz Solfeggio frequency chime
+  };
+
+  const handleSaveReflection = (val: string) => {
+    setUserReflection(val);
+    localStorage.setItem(`reflection_${selectedZodiac.id}`, val);
+  };
 
   const fetchHoroscope = async (signId: string) => {
     setLoading(true);
@@ -111,6 +133,103 @@ export const HoroscopeDashboard: React.FC<HoroscopeDashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left 8 Cols: Horoscope Breakdown */}
         <div className="lg:col-span-8 space-y-6">
+          {/* Daily Affirmation Card */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-purple-950/30 to-black rounded-3xl border border-amber-400/40 p-6 sm:p-8 backdrop-blur-md shadow-[0_0_25px_rgba(251,191,36,0.15)] space-y-4 group">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/5 rounded-full blur-2xl pointer-events-none group-hover:bg-amber-400/10 transition-all" />
+            
+            <div className="flex items-center justify-between border-b border-amber-400/20 pb-3 relative z-10">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-amber-200/10 border border-amber-300/30 text-amber-300">
+                  <Sparkles className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-300/80">Daily Zodiac Affirmation</span>
+                  <h3 className="font-serif text-lg font-bold text-amber-100 flex items-center gap-2">
+                    <span>{selectedZodiac.name} {selectedZodiac.symbol}</span>
+                    <span className="text-xs font-sans font-normal text-purple-200/60">• Updated Daily</span>
+                  </h3>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleChimeAffirmation}
+                  className="p-2 rounded-full bg-black/40 border border-amber-400/30 text-amber-200 hover:bg-amber-300 hover:text-slate-950 transition-all text-xs flex items-center gap-1.5 px-3 font-mono font-semibold"
+                  title="Ring 528Hz Solfeggio Chime"
+                >
+                  <Volume2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Chime</span>
+                </button>
+
+                <button
+                  onClick={() => handleCopyAffirmation(horoscope.daily_affirmation)}
+                  className={`p-2 rounded-full border transition-all text-xs flex items-center gap-1.5 px-3 font-mono font-semibold ${
+                    copiedAffirmation
+                      ? 'bg-emerald-400 text-slate-950 border-emerald-300'
+                      : 'bg-black/40 border-purple-500/30 text-purple-200 hover:text-white hover:border-amber-400/40'
+                  }`}
+                  title="Copy Affirmation"
+                >
+                  {copiedAffirmation ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Copy</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Affirmation Quote Body */}
+            <div className="relative z-10 pt-1 space-y-3">
+              <div className="flex items-start gap-3">
+                <Quote className="w-8 h-8 text-amber-300/40 shrink-0 rotate-180" />
+                <p className="font-serif text-xl sm:text-2xl text-amber-100 leading-relaxed font-normal tracking-wide italic">
+                  "{horoscope.daily_affirmation}"
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={() => setShowReflection(!showReflection)}
+                  className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-purple-200/80 hover:text-amber-200 transition-colors"
+                >
+                  <PenTool className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{showReflection ? 'Close Intention Note' : userReflection ? 'View Personal Intention' : 'Add Daily Intention / Note'}</span>
+                </button>
+
+                <span className="text-[10px] font-mono text-purple-300/50 uppercase tracking-widest">
+                  Element: {selectedZodiac.element}
+                </span>
+              </div>
+
+              {/* Optional Reflection / Journal Note Box */}
+              {showReflection && (
+                <div className="mt-3 pt-3 border-t border-purple-500/20 animate-fadeIn space-y-2">
+                  <label className="text-xs font-mono text-amber-200/80 flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5 text-amber-400" />
+                    <span>My Intention & Reflection for Today ({horoscope.date}):</span>
+                  </label>
+                  <textarea
+                    value={userReflection}
+                    onChange={(e) => handleSaveReflection(e.target.value)}
+                    placeholder="Write down how this affirmation aligns with your goals today..."
+                    rows={3}
+                    className="w-full bg-black/60 border border-purple-500/30 rounded-2xl p-3 text-xs text-purple-100 placeholder-purple-300/40 focus:outline-none focus:border-amber-300 transition-colors resize-none"
+                  />
+                  <p className="text-[10px] font-mono text-purple-300/50 text-right">
+                    Saved automatically to your device.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Overview Card */}
           <div className="bg-purple-950/20 rounded-3xl border border-purple-500/30 p-6 backdrop-blur-sm space-y-4">
             <div className="flex items-center justify-between border-b border-purple-900/40 pb-3">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SpreadType, TarotCard, PlacedCard, InterpretationResult } from '../types';
 import { SPREAD_CONFIGS } from '../data/spreadsData';
 import { TAROT_CARDS } from '../data/tarotData';
@@ -6,6 +6,8 @@ import { SpreadSlot } from './SpreadSlot';
 import { DeckArea } from './DeckArea';
 import { FanSpreadPicker } from './FanSpreadPicker';
 import { InterpretationPanel } from './InterpretationPanel';
+import { StardustConfetti } from './StardustConfetti';
+import { zenAudio } from '../utils/zenAudio';
 import { Sparkles, RefreshCw, Compass, Layers, CheckCircle2, LayoutGrid, Disc } from 'lucide-react';
 
 interface ReadingCanvasProps {
@@ -26,8 +28,19 @@ export const ReadingCanvas: React.FC<ReadingCanvasProps> = ({ onSaveReading }) =
   const [interpretation, setInterpretation] = useState<InterpretationResult | null>(null);
   const [isInterpreting, setIsInterpreting] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showStardust, setShowStardust] = useState<boolean>(false);
+  const [hasCelebrated, setHasCelebrated] = useState<boolean>(false);
 
   const currentSpreadConfig = SPREAD_CONFIGS.find((s) => s.id === selectedSpread) || SPREAD_CONFIGS[0];
+
+  // Trigger stardust celebration when spread sequence completes
+  useEffect(() => {
+    if (placedCards.length === currentSpreadConfig.cardCount && placedCards.length > 0 && !hasCelebrated) {
+      setShowStardust(true);
+      setHasCelebrated(true);
+      zenAudio.playSingingBowlChime(528); // Celebratory 528Hz Solfeggio chime
+    }
+  }, [placedCards.length, currentSpreadConfig.cardCount, hasCelebrated]);
 
   // Handle spread type change
   const handleSpreadChange = (spreadId: SpreadType) => {
@@ -40,6 +53,8 @@ export const ReadingCanvas: React.FC<ReadingCanvasProps> = ({ onSaveReading }) =
     setDeck([...TAROT_CARDS]);
     setPlacedCards([]);
     setInterpretation(null);
+    setHasCelebrated(false);
+    setShowStardust(false);
   };
 
   // Shuffle deck
@@ -160,6 +175,8 @@ export const ReadingCanvas: React.FC<ReadingCanvasProps> = ({ onSaveReading }) =
         const data = await res.json();
         setInterpretation(data.interpretation);
         setIsModalOpen(true);
+        setShowStardust(true);
+        zenAudio.playSingingBowlChime(432);
       }
     } catch (err) {
       console.error('Interpretation fetch failed:', err);
@@ -409,6 +426,8 @@ export const ReadingCanvas: React.FC<ReadingCanvasProps> = ({ onSaveReading }) =
           }}
         />
       )}
+      {/* Stardust Celebration Confetti Animation */}
+      <StardustConfetti isActive={showStardust} onComplete={() => setShowStardust(false)} />
     </div>
   );
 };
